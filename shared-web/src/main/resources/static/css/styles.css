@@ -1,0 +1,161 @@
+/* Reset some basic elements */
+body, h1, p, ul, li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure the body and html take full height */
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Wrapper to hold the content and footer */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Flex-grow the main content to push the footer down */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Arrange items vertically, default is horizontal */
+    justify-content: left; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    padding: 20px;
+}
+
+/* Header styles */
+header {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 7px 0;
+    text-align: center;
+    margin-bottom: 11px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+header .user-info {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+header h1 {
+    margin: 10px 0;
+}
+
+/* Specific styling for the logout link */
+header a {
+    color: #ffffff; /* Change the link color to white */
+    text-decoration: none;
+}
+header a:hover {
+    text-decoration: underline;
+}
+
+/* Unordered list styles */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* List item styles */
+ul li {
+    background: #e2e2e2;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+    display: inline-block;
+}
+.main-menu > li {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* SUBMENU: Keep submenu items inline (side-by-side) */
+.submenu li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+ul li:hover {
+    background: #d4d4d4;
+}
+
+/* Link styles */
+ul li a {
+    color: #003366;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px 20px;
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 10px;
+    background: #003366;
+    color: #ffffff;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+/* Adding responsiveness */
+@media (max-width: 768px) {
+    ul li {
+        padding: 8px;
+        font-size: 16px;
+    }
+
+    ul li a {
+        font-size: 16px;
+    }
+}
+
+/* Spinner styles */
+.spinner {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+    0%   { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+

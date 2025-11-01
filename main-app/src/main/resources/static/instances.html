@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instance Management</title>
+</head>
+<body>
+<h1>Instance Management 3.1</h1>
+<div id="instances"></div>
+<button onclick="stopAllInstances()">Stop All Instances</button>
+<script>
+    async function fetchInstances() {
+        const response = await fetch('/instances');
+        const instances = await response.json();
+        let html = '<table><tr><th>Name</th><th>Zone</th><th>Status</th><th>Private IP</th><th>Public IP</th><th>Actions</th></tr>';
+        instances.forEach(instance => {
+            html += `<tr>
+                    <td>${instance.name}</td>
+                    <td>${instance.zone}</td>
+                    <td>${instance.status}</td>
+                    <td>${instance.privateIP}</td>
+                    <td>${instance.publicIP || ''}</td>
+                    <td>
+                        <button onclick="startInstance('${instance.zone}', '${instance.name}')">Start</button>
+                        <button onclick="stopInstance('${instance.zone}', '${instance.name}')">Stop</button>
+                    </td>
+                </tr>`;
+        });
+        html += '</table>';
+        document.getElementById('instances').innerHTML = html;
+    }
+
+    async function startInstance(zone, name) {
+        await fetch(`/instances/start?zone=${zone}&instanceName=${name}`, { method: 'POST' });
+        fetchInstances();
+    }
+
+    async function stopInstance(zone, name) {
+        await fetch(`/instances/stop?zone=${zone}&instanceName=${name}`, { method: 'POST' });
+        fetchInstances();
+    }
+
+    async function stopAllInstances() {
+        await fetch(`/instances/stopAll`, { method: 'POST' });
+        fetchInstances();
+    }
+
+    fetchInstances();
+</script>
+</body>
+</html>

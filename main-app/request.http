@@ -1,0 +1,63 @@
+GET https://www.google.com/
+
+###
+
+GET localhost:8080/contacts
+
+###
+
+POST https://compute.googleapis.com/compute/v1/projects/prime-script-309501/zones/{{ZONE}}/instances/{{VM_NAME}}/testIamPermissions
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_TOKEN}}
+
+{
+  "permissions": [
+    "compute.instances.start",
+    "compute.instances.stop",
+    "compute.instances.delete"
+  ]
+}
+
+
+### gcloud  run deploy ins1 --image gcr.io/yaping-2027-start-apr012021/ins1 --platform managed --region us-east1 --allow-unauthenticated    --service-account  my-translation-sa@yaping-2027-start-apr012021.iam.gserviceaccount.com
+
+### mvn clean package
+### docker build -t gcr.io/yaping-2027-start-apr012021/erp01 .
+### docker push gcr.io/yaping-2027-start-apr012021/erp01
+### gcloud run deploy erp01 --image gcr.io/yaping-2027-start-apr012021/erp01 --platform managed --region us-east1 --allow-unauthenticated --service-account my-translation-sa@yaping-2027-start-apr012021.iam.gserviceaccount.com --memory 4Gi   --timeout 900
+
+
+###
+
+# curl -X GET "https://api.cloudflare.com/client/v4/zones?name=nineforce.com"
+#-H "Authorization: Bearer ufYrWE7ZjMVcA11YrBsYZyXRYBENTBKevrffN9Ii"
+#-H "Content-Type: application/json"
+GET https://api.cloudflare.com/client/v4/zones?name=nineforce.com
+Authorization: Bearer ufYrWE7ZjMVcA11YrBsYZyXRYBENTBKevrffN9Ii
+Content-Type: application/json
+
+###
+
+
+# curl -X GET "https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_ID/dns_records?type=A&name=subdomain.nineforce.com"
+#-H "Authorization: Bearer YOUR_API_TOKEN"
+#-H "Content-Type: application/json"
+GET https://api.cloudflare.com/client/v4/zones/1b177330b2d32c95cfe70bbb17369e17/dns_records?type=A& name=ad.nineforce.com
+Authorization: Bearer ufYrWE7ZjMVcA11YrBsYZyXRYBENTBKevrffN9Ii
+Content-Type: application/json
+
+
+### Update A Record
+
+
+PUT https://api.cloudflare.com/client/v4/zones/1b177330b2d32c95cfe70bbb17369e17/dns_records/b34224d48e232ee30f111c5f95891582
+Authorization: Bearer ufYrWE7ZjMVcA11YrBsYZyXRYBENTBKevrffN9Ii
+Content-Type: application/json
+
+{
+  "type": "A",
+  "name": "ad.nineforce.com",
+  "content": "34.132.249.217",
+  "ttl": 120,
+  "proxied": false
+}

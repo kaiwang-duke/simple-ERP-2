@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud SQL Manager </title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script>
+        function startInstance() {
+            // Hardcoded instanceId (assuming it's always "ecom")
+            const instanceId = 'ecom';
+
+            fetch('/api/start-instance?instanceId=' + instanceId, {
+                method: 'POST',
+            })
+                .then(response => response.text())
+                .then(data => {
+                    showErrorModal(data);  // Show success or failure message
+                    //location.reload();  // Optionally reload the page to refresh instance status
+                })
+                .catch(error => {
+                    console.error('Error starting instance:', error);
+                    showErrorModal('Failed to start instance.');
+                });
+        }
+
+        function showErrorModal(message) {
+             document.getElementById("errorMessage").innerText = message;
+             document.getElementById("errorModal").style.display = "block";
+        }
+
+        function closeErrorModal() {
+            document.getElementById("errorModal").style.display = "none";
+        }
+    </script>
+    <style>
+        #instance-status-section {
+            display: flex;
+            align-items: center;
+        }
+        #instance-status-section > p,
+        #instance-status-section > h3,
+        #instance-status-section > button {
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div th:replace="~{layout :: header}"></div>
+
+<main>
+    <section id="instance-status-section">
+        <h3> Instance Status</h3>
+        <p id="instance-status" th:text="${instanceStatus}"> </p>
+        <p id="activation-policy" th:text="${activationPolicy}"> </p>
+        <button id="start-button"
+                th:disabled="${!(activationPolicy == 'NEVER') && (instanceStatus == 'RUNNABLE')}"
+                th:onclick="startInstance()">
+            Start Instance
+        </button>
+    </section>
+</main>
+
+<!-- Error Modal -->
+<div id="errorModal" style="display:none; position: fixed; z-index: 9999; background: white; padding: 20px; width: 80%; height: 50%; overflow: auto; border: 1px solid black;">
+        <h3>Result - Please Refresh The Page</h3>
+        <pre id="errorMessage" style="white-space: pre-wrap;"></pre>
+        <button onclick="closeErrorModal()">Close</button>
+</div>
+
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

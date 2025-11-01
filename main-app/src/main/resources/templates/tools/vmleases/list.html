@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>VM Leases</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .spinner{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+            border:16px solid #f3f3f3;border-radius:50%;border-top:16px solid #3498db;
+            width:120px;height:120px;animation:spin 2s linear infinite}
+        @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main th:fragment="content">
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Public IP</th>
+            <th>Last&nbsp;User</th>
+            <th>Started</th>
+            <th>Expires</th>
+            <th>Min&nbsp;Left</th>
+            <th>Proxy</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="inst : ${instances}"
+            th:data-rem="${inst.remainingMin}"
+            th:data-status="${inst.status}">
+            <!-- basic info -->
+            <td th:text="${inst.name}">vm-name</td>
+            <td th:text="${inst.publicIP}">34.120.x.x</td>
+            <td th:text="${inst.leaseUser ?: '-'}">n/a</td>
+
+            <!-- lease times -->
+            <td th:text="${inst.startedAt != null ? #temporals.format(inst.startedAt,'HH:mm') : '-'}"></td>
+            <td th:text="${inst.expiresAt != null ? #temporals.format(inst.expiresAt,'HH:mm') : '-'}"></td>
+            <td th:text="${inst.remainingMin}">0</td>
+
+            <!-- proxy radio -->
+            <td style="text-align:center;">
+                <form th:action="@{/tools/vmleases/setProxy}" method="post" class="proxy-form">
+                    <input type="hidden" name="instanceName" th:value="${inst.name}">
+                    <input type="hidden" name="publicIP"     th:value="${inst.publicIP}">
+                    <input type="radio"  name="proxy"
+                           th:value="${inst.name}"
+                           th:checked="${#strings.trim(inst.publicIP).equals(#strings.trim(currentProxyIP))}"
+                           th:disabled="${#strings.length(inst.publicIP) < 7}"
+                           onchange="this.form.submit()">
+                </form>
+            </td>
+
+            <!-- actions -->
+            <td>
+                <form th:action="@{/tools/vmleases/start}" method="post" style="display:inline-block" class="vm-form">
+                    <input type="hidden" name="zone"   th:value="${inst.zone}">
+                    <input type="hidden" name="vmName" th:value="${inst.name}">
+                    <button type="submit" class="start-btn">Start</button>
+                </form>
+
+                <form th:action="@{/tools/vmleases/extend}" method="post" style="display:inline-block" class="vm-form">
+                    <input type="hidden" name="zone"   th:value="${inst.zone}">
+                    <input type="hidden" name="vmName" th:value="${inst.name}">
+                    <button type="submit" class="extend-btn">Add&nbsp;+15</button>
+                </form>
+
+                <form th:action="@{/tools/vmleases/stop}" method="post" style="display:inline-block" class="vm-form">
+                    <input type="hidden" name="zone"   th:value="${inst.zone}">
+                    <input type="hidden" name="vmName" th:value="${inst.name}">
+                    <button type="submit" class="stop-btn">Stop</button>
+                </form>
+            </td>
+        </tr>
+
+        <!-- footer row -->
+        <tr>
+            <td colspan="8" style="text-align:left;">
+                <form th:action="@{/tools/vmleases/stopAll}" method="post" class="vm-form">
+                    <button type="submit">Stop&nbsp;All&nbsp;Instances</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div id="spinner" class="spinner"></div>
+</main>
+<div th:replace="~{layout :: footer}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        /* spinner for any VM form --------------------------------------------------- */
+        document.querySelectorAll('.vm-form')
+            .forEach(f=>f.addEventListener('submit', ()=>{spinner.style.display='block'}));
+
+        /* enable/disable buttons ---------------------------------------------------- */
+        const FIFTEEN  = 15;                                 // minutes
+        const rows     = document.querySelectorAll('tr[data-status]');
+        rows.forEach(row=>{
+            const status      = row.dataset.status;
+            const remaining   = parseInt(row.dataset.rem,10)||0;
+
+            const startBtn   = row.querySelector('.start-btn');
+            const extendBtn  = row.querySelector('.extend-btn');
+            const stopBtn    = row.querySelector('.stop-btn');
+
+            // START
+            startBtn.disabled  = (status === 'RUNNING');
+
+            // EXTEND (+15)
+            extendBtn.disabled = !(status === 'RUNNING' && remaining < FIFTEEN);
+
+            // STOP
+            stopBtn.disabled   = (status !== 'RUNNING');
+        });
+    });
+</script>
+</body>
+</html>

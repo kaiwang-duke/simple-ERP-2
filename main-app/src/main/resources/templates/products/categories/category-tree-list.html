@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Category Tree List</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <style>
+    /* Modern tree styles using nested lists */
+    .modern-tree > ul {
+      display: flex;
+      list-style: none;
+      padding-left: 0;
+      gap: 37px; /* Adjust the value as needed */
+    }
+    .modern-tree li {
+      display: block !important;
+      margin: 5px 0;
+      padding: 5px;
+      background: #e2e2e2;
+      border-radius: 4px;
+    }
+    .modern-tree .cat1 {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+    .modern-tree .cat2 {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+    .modern-tree .cat3 {
+      font-size: 1em;
+      margin-left: 40px;
+    }
+
+    /* Preformatted Unicode tree styling */
+    .pre-tree {
+      font-family: "Courier New", Courier, monospace;
+      white-space: pre;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+      max-width: 600px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+<main>
+  <h2>Category Tree List (Database)</h2>
+
+  <!-- Modern view: nested lists -->
+  <div class="modern-tree" th:if="${categoryTree}">
+    <ul>
+      <!-- Level 1 -->
+      <li th:each="cat1Entry : ${categoryTree.entrySet()}">
+        <span class="cat1" th:text="${cat1Entry.key}"></span>
+        <ul>
+          <!-- Level 2 -->
+          <li th:each="cat2Entry : ${cat1Entry.value.entrySet()}">
+            <span class="cat2" th:text="${cat2Entry.key}"></span>
+            <ul>
+              <!-- Level 3 -->
+              <li th:each="cat3 : ${cat2Entry.value}">
+                <span class="cat3" th:text="${cat3}"></span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <hr/>
+
+  <!-- Preformatted Unicode tree -->
+  <div class="pre-tree" th:if="${unicodeTreeString}" th:text="${unicodeTreeString}"></div>
+
+</main>
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

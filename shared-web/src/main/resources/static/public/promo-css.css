@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    font-size: 18px; /* Set the font size here */
+}
+h1 {
+    color: #333;
+}
+.step {
+    margin-bottom: 20px;
+}
+.step-number {
+    font-weight: bold;
+    color: #0073bb;
+}
+.step-description {
+    margin-top: 5px;
+}
+
+.image-container {
+    margin: 10px;
+    overflow: auto; /* Helps with the float */
+}
+.image-container img {
+    max-width: 25%; /* Set max-width to control image size */
+    height: auto; /* Maintain aspect ratio */
+    margin: 10px 10px 10px 0; /* Adjust margin for alignment */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.image-container img:first-child {
+    float: left;
+    margin-right: 10px;
+}
+.image-container img:last-child {
+    margin-left: 10px;
+    float: left; /* Align images to the left */
+}
+@media screen and (max-width: 600px) {
+    .image-container img {
+        float: none;
+        display: block;
+        margin: 10px auto;
+        max-width: 100%; /* Full width on small screens */
+    }
+}
+.highlight {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d9534f; /* Bootstrap danger color for emphasis */
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 16px;
+    color: #666;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+#product-links {
+    display: none;
+}

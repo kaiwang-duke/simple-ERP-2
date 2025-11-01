@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+<h1>Error</h1>
+<p th:text="${errorMessage}"></p> <!-- This will display the error message from the exception -->
+<img src="/images/dog.jpg" alt="Cute dog" style="width: 37%; height: auto;" />
+<h1>Stack Trace</h1>
+<p th:text="${stackTrace}"></p>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false">
+
+    <!-- ─────────────────────────────
+         1) Common pattern & colours
+       ───────────────────────────── -->
+    <property name="PATTERN"
+              value="%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %msg%n"/>
+
+    <!-- ─────────────────────────────
+         2) Console appender
+       ───────────────────────────── -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ─────────────────────────────
+         3) Test-specific logger tweaks
+       ───────────────────────────── -->
+
+    <!-- 3-a  Silence most libraries during tests -->
+    <logger name="org.springframework"        level="WARN"/>
+    <logger name="org.hibernate"              level="WARN"/>
+    <logger name="org.flywaydb.core.internal" level="WARN"/>
+
+    <!-- 3-b  Keep your own code reasonably chatty for failed tests -->
+    <logger name="com.nineforce" level="INFO"/>
+
+    <!-- 3-c  OPTIONAL: colour the explicit “✅” lines bright green -->
+    <logger name="com.nineforce.service.product.category.CategoryTreeParserServiceTest"
+            level="INFO"/>
+
+    <!-- ─────────────────────────────
+         4) Root logger: show only ERRORs
+       ───────────────────────────── -->
+    <root level="ERROR">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,78 @@
+server:
+  port: ${PORT:8080}
+  address: 0.0.0.0
+  servlet:
+    session:
+      timeout: 77m
+    context-path: /
+
+spring:
+  application:
+    name: 9Force-Simple-ERP
+
+  main:
+    lazy-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+
+  sql:
+    init:
+      continue-on-error: true
+      #defer-datasource-initialization: true
+
+  jpa:
+    generate-ddl: false
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: validate   # Prevents Hibernate from modifying the database schema
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: false
+        temp.use_jdbc_metadata_defaults: false  # Prevent Hibernate from accessing the database during startup
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    clean-disabled: true
+
+logging:
+  level:
+    com.nineforce: DEBUG
+    org:
+      springframework:
+        web: WARN
+        security: DEBUG
+      # Uncomment these for detailed logging for Thymeleaf
+      # thymeleaf: TRACE
+      # thymeleaf:
+      #   engine: TRACE
+      #   templatemode: TRACE
+      #   cache: TRACE
+      #   spring5: TRACE
+      #   spring5.view: TRACE
+
+    # Uncomment these for detailed logging for Spring Security authentication and authorization processes
+    # org.springframework.security.authentication: TRACE
+    # org.springframework.security.web.authentication: TRACE
+    # org.springframework.security.web.access: TRACE
+
+    # Uncomment these for detailed logging for Spring Security filters
+    # org.springframework.security.web.FilterChainProxy: TRACE
+    # org.springframework.security.web.access.intercept.FilterSecurityInterceptor: TRACE
+    # org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter: TRACE
+
+    # Uncomment these for custom authentication filters logging
+    # com.nineforce.config.FirebaseAuthenticationFilter: TRACE

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: 9Force-Simple-ERP (dev)
+  security:
+    user:
+      name: dev
+      password: dev123
+      roles: ADMIN
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_db
+    username: kaiwang
+    password:
+    hikari:
+      initialization-fail-timeout: -1
+      minimum-idle: 0
+      maximum-pool-size: 5
+      connection-timeout: 1777
+  flyway:
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}

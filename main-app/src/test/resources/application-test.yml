@@ -1,0 +1,21 @@
+# Set any Spring Boot properties for testing
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_db   # Use a test database if available
+    username: test_user
+    password: test_password
+    hikari:
+      initialization-fail-timeout: -1
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      ddl-auto: none  # or update if you want Hibernate to update your test schema
+
+# Dummy Firebase configuration for tests
+firebase:
+  auth-url: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=dummyTestKey"
+  # Use a test service account file (place a dummy JSON file in src/test/resources if needed)
+  service-account-file: "classpath:firebase-test-service-account.json"
+  # Optionally, add a flag to disable real Firebase calls in tests
+  enabled: false

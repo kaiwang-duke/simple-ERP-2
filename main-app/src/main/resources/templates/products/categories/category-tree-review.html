@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Review Category Changes</title>
+
+    <!-- global look-&-feel -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+
+    <!-- page-specific tweaks -->
+    <!--suppress CssUnusedSymbol -->
+    <style>
+        /* colour by change type */
+        .ADD    { background:#e6ffed; }   /* greenish   */
+        .DELETE { background:#ffecec; }   /* reddish    */
+
+        /* the NEW row – vivid lavender */
+        .UPDATE.NEW { background:#efe6ff; border-left:4px solid #9c7bff; }
+
+        /* the OLD row – very light lavender                        ↓↓↓ */
+        .UPDATE.OLD { background:#f7f3ff !important; }
+
+        table { border-collapse:collapse; width:100%; }
+        th,td { border:1px solid #ddd; padding:.4em .6em; font-size:.95rem; }
+        th   { background:#fafafa; text-align:left; }
+        .OLD { opacity: 1 !important; }
+
+    </style>
+</head>
+
+<body>
+<!-- header / nav borrowed from layout -->
+<div th:replace="~{layout :: header}"></div>
+
+<main th:fragment="content">
+    <h3>Review Category Changes Carefully Before Commit to Database</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Status</th>
+            <th>Path</th>
+            <th>Name&nbsp;(EN)</th>
+            <th>Name&nbsp;(CN)</th>
+            <th>Seasonal</th>
+            <th>Start&nbsp;M</th>
+            <th>Stop&nbsp;M</th>
+            <th>Purchase&nbsp;M</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- already sorted in controller -->
+        <tr th:each="chg : ${changes}"
+            th:class="${chg.type + ' ' + (chg.oldLine() ? 'OLD' : 'NEW')}">
+
+            <td th:text="${chg.type}">ADD</td>
+            <td th:text="${chg.path}">Root → Child → Leaf</td>
+            <td th:text="${chg.name}">Apple</td>
+            <td th:text="${chg.cnName}">苹果</td>
+            <td th:text="${chg.seasonal}">true</td>
+            <td th:text="${chg.startMonth}">3</td>
+            <td th:text="${chg.stopMonth}">9</td>
+            <td th:text="${chg.purchaseMonth}">2</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form th:action="@{/products/categories/category-tree-parser/apply}" method="post" style="margin-top:1.2em">
+        <button type="submit">Apply</button>
+        <a th:href="@{/products/categories/category-tree-parser}">Cancel</a>
+    </form>
+
+    <P>.</P>
+    <P>.</P>
+    <P>.</P>
+    <h4>Category Structure From Uploaded File</h4>
+    <!-- Category tree visualization, shown under the buttons -->
+    <div class="category-tree" th:if="${categoryTree}" style="margin-top:2em; text-align:left;">
+        <pre th:text="${categoryTree}"></pre>
+    </div>
+</main>
+
+<!-- footer -->
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

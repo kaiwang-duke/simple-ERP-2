@@ -1,0 +1,19 @@
+# application-local.yaml
+spring:
+  custom:
+    check: "This is local profile."
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/test_db
+    username: kaiwang
+    password:
+    hikari:
+      initialization-fail-timeout: -1
+      minimum-idle: 0
+      maximum-pool-size: 5
+      connection-timeout: 17777
+
+  flyway:
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}

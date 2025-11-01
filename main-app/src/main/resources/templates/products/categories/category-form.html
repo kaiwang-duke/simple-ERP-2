@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:with="title=${category.id == null ? 'New Category' : 'Edit Category---'}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Default Title</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+<div class="wrapper">
+
+    <div th:replace="~{layout :: header}"></div>
+
+    <main>
+        <h1 class="display-6 text-center mt-4" th:text="${category.id == null ? 'Add Category' : 'Edit Category'}">Category</h1>
+
+        <form th:action="@{/products/categories/save}"
+              th:object="${category}"
+              method="post"
+              class="row g-3 align-items-center px-5 py-4" style="max-width: 1000px; margin: 0 auto;">
+
+            <!-- HIDDEN ID FIELD: ensures id is bound on submit -->
+            <input type="hidden" th:field="*{id}" />
+
+            <!-- ID (always show) -->
+            <div class="col-12 row">
+                <label class="col-sm-3 col-form-label form-label-lg">ID</label>
+                <div class="col-sm-9">
+        <span class="form-control-plaintext fs-5 text-muted"
+              th:text="${category.id != null ? category.id : 'System Auto Generating'}">
+            System Auto Generating
+        </span>
+                </div>
+            </div>
+
+            <!-- Name -->
+            <div class="col-12 row">
+                <label for="name" class="col-sm-3 col-form-label form-label-lg">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" th:field="*{name}" id="name" class="form-control form-control-lg" required placeholder="Category name"/>
+                </div>
+            </div>
+
+            <!-- Chinese Name -->
+            <div class="col-12 row">
+                <label for="cnName" class="col-sm-3 col-form-label form-label-lg">Chinese Name</label>
+                <div class="col-sm-9">
+                    <input type="text" th:field="*{cnName}" id="cnName" class="form-control form-control-lg" required placeholder="中文名称"/>
+                </div>
+            </div>
+
+            <!-- Seasonal -->
+            <div class="col-12 row">
+                <label for="isSeasonal" class="col-sm-3 col-form-label form-label-lg">Seasonal</label>
+                <div class="col-sm-9">
+                    <div class="form-check form-switch form-switch-lg">
+                        <input type="checkbox" th:field="*{seasonal}" id="isSeasonal" class="form-check-input"/>
+                        <label class="form-check-label" for="isSeasonal">Yes</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Selling Month -->
+            <div class="col-12 row">
+                <label for="startSellingMonth" class="col-sm-3 col-form-label form-label-lg">Start Selling Month</label>
+                <div class="col-sm-9">
+                    <input type="number" th:field="*{startSellingMonth}" id="startSellingMonth" class="form-control form-control-lg" min="1" max="12" placeholder="1–12"/>
+                </div>
+            </div>
+
+            <!-- Stop Selling Month -->
+            <div class="col-12 row">
+                <label for="stopSellingMonth" class="col-sm-3 col-form-label form-label-lg">Stop Selling Month</label>
+                <div class="col-sm-9">
+                    <input type="number" th:field="*{stopSellingMonth}" id="stopSellingMonth" class="form-control form-control-lg" min="1" max="12" placeholder="1–12"/>
+                </div>
+            </div>
+
+            <!-- Purchase Month -->
+            <div class="col-12 row">
+                <label for="purchaseMonth" class="col-sm-3 col-form-label form-label-lg">Purchase Month</label>
+                <div class="col-sm-9">
+                    <input type="number" th:field="*{purchaseMonth}" id="purchaseMonth" class="form-control form-control-lg" min="1" max="12" placeholder="1–12"/>
+                </div>
+            </div>
+
+            <!-- Parent Category -->
+            <div class="col-12 row">
+                <label for="parent" class="col-sm-3 col-form-label form-label-lg">Parent Category</label>
+                <div class="col-sm-9">
+                    <select th:field="*{parent}" id="parent" class="form-select form-select-lg">
+                        <option value="">— None (Root) —</option>
+                        <option th:each="r : ${roots}" th:value="${r.id}" th:text="${r.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="col-12 d-flex justify-content-end mt-4">
+                <a href="/products/categories" class="btn btn-secondary btn-lg me-2">Cancel</a>
+                <button type="submit" class="btn btn-primary btn-lg"
+                th:text="${category.id == null ? 'Create' : 'Update'}">
+                    Default Button [Create or Update]
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <div th:replace="~{layout :: footer}"></div>
+</div><!-- End of wrapper -->
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Category Tree Parser</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        /* Override any global li styles for the .category-tree */
+        .category-tree li { display: block; background: none; margin: 4px 0; padding: 0; }
+
+        /*
+   Optional: Remove bullets, then control indentation and style manually.
+   If your global 'ul li { ... }' rules conflict, you can override with more specific selectors.
+*/
+        .category-tree ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+   </style>
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<main th:fragment="content">
+    <h3>Upload an inventory file and double-check that the product sheet contains the correct category information.</h3>
+
+    <!-- flash messages ---------------------------------------------------- -->
+    <div th:if="${message}"
+         style="margin-bottom:1rem; padding:.6rem 1rem; background:#e8f5e9;
+            border:1px solid #2e7d32; color:#2e7d32;">
+        <span th:text="${message}">✔ Success</span>
+    </div>
+
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
+    <pre th:if="${error}"
+         style="margin-bottom:1rem; padding:.6rem 1rem; background:#ffebee;
+            border:1px solid #c62828; color:#c62828; white-space:pre-wrap;"
+         th:text="${error}">Something went wrong</pre>
+    <!-- ------------------------------------------------------------------- -->
+
+
+    <!-- Upload Form -->
+    <form method="post" enctype="multipart/form-data" th:action="@{/products/categories/category-tree-parser/process}">
+        <input type="file" name="file" accept=".xlsx" required>
+        <button type="submit">Upload and Parse</button>
+    </form>
+
+    <!-- Show any message from controller -->
+    <!--/*@thymesVar id="message" type=""*/-->
+    <div th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:unless="${message}">
+        <p>No Message</p>
+    </div>
+
+    <!-- Spinner -->
+    <div class="spinner" id="spinner"></div>
+
+    <div class="category-tree" th:if="${categoryTree}" style="margin-top:2em; text-align:left;">
+        <h4>Category Structure From Uploaded File</h4>
+        <pre th:text="${categoryTree}"></pre>
+    </div>
+
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const spinner = document.getElementById('spinner');
+
+        form.addEventListener('submit', function() {
+            // Show spinner on form submission
+            spinner.style.display = 'block';
+        });
+    });
+</script>
+</body>
+</html>

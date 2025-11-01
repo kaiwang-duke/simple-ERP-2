@@ -1,0 +1,15 @@
+# application-cloud.yaml
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql:///test_db?cloudSqlInstance=eng-empire-470108-k1:us-east1:ecom&socketFactory=com.google.cloud.sql.postgres.SocketFactory
+    username: postgres
+    password: 9Force@9Force
+    hikari:
+      initialization-fail-timeout: -1
+      minimum-idle: 0
+      maximum-pool-size: 5
+      connection-timeout: 17777
+      data-source-properties:
+        socketFactory: com.google.cloud.sql.postgres.SocketFactory
+        cloudSqlInstance: eng-empire-470108-k1:us-east1:ecom

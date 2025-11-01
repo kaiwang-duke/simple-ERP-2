@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+<main th:fragment="content">
+
+    <form method="post" enctype="multipart/form-data" th:action="@{/tools/inventory-file-converter/process}">
+        <input type="file" name="file" accept=".xlsx" required>
+        <button type="submit">Upload and Process </button>
+    </form>
+
+        <div th:if="${message}">
+            <p th:text="${message}"></p>
+        </div>
+        <div th:unless="${message}">
+            <p>No Message</p>
+        </div>
+
+    <div th:if="${downloadLink}">
+        <!--
+        <a th:href="${downloadLink}">Download Processed File</a>
+        -->
+        <div th:if="${downloadLink}">
+            <a th:href="@{'/tools/inventory-file-converter/download?filename=' + ${downloadLink}}">Download Processed File</a>
+        </div>
+    </div>
+
+    <div class="spinner" id="spinner"></div>
+</main>
+<div th:replace="~{layout :: footer}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.querySelector('form');
+        var spinner = document.getElementById('spinner');
+
+        form.addEventListener('submit', function() {
+            spinner.style.display = 'block';
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: db-switch-app
+
+  custom:
+    profile: "local"
+
+logging:
+  level:
+    com.nineforce: DEBUG
+    org.springframework: INFO

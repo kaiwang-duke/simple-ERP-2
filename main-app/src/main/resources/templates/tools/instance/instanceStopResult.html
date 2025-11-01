@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Start Instance Result</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .content {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .content p {
+            margin: 5px 0;
+        }
+        a {
+            color: #003366;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="~{layout :: header}"></div>
+    <main>
+        <div class="container">
+            <h2>Instance Start Result</h2>
+            <div class="content">
+                <div th:if="${status == 'success'}">
+                    <p th:text="${message}"></p>
+                    <p><strong>Instance Name:</strong> <span th:text="${instanceDetails.name}"></span></p>
+                    <p><strong>Zone:</strong> <span th:text="${instanceDetails.zone}"></span></p>
+                    <p><strong>Status:</strong> <span th:text="${instanceDetails.status}"></span></p>
+                    <p><strong>Private IP:</strong> <span th:text="${instanceDetails.privateIP}"></span></p>
+                    <p><strong>Public IP:</strong> <span th:text="${instanceDetails.publicIP}"></span></p>
+                </div>
+                <div th:if="${status == 'error'}">
+                    <p th:text="${message}"></p>
+                </div>
+            </div>
+            <a th:href="@{/tools/instance}">Back to VM List</a>
+        </div>
+    </main>
+    <div th:replace="~{layout :: footer}"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Management Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+<main>
+    <ul class="main-menu">
+        <li>
+            <a href="#">Tools</a>
+            <ul class="submenu">
+                <li><a th:href="@{/tools/instance}">Manage Google Cloud VM 0.2</a></li>
+                <li><a th:href="@{/tools/vmleases}">Manage Google Cloud VM 0.3</a></li>
+                <li><a th:href="@{/tools/inventory-file-converter}">Inventory File Converter</a></li>
+                <li><a th:href="@{/tools/cloud-sql/cloud-sql-manager}">Manage Cloud SQL</a></li>
+            </ul>
+        </li>
+        <li>
+            Products and Categories
+            <ul class="submenu">
+                <li><a th:href="@{/products/categories/category-tree-list}">Category Tree List</a></li>
+                <li><a th:href="@{/products/categories/category-table-list}">Category Table List</a></li>
+                <li><a th:href="@{/products/categories/category-tree-parser}">Category Parser</a></li>
+                <li><a th:href="@{/products/categories/product-list}">Product List  TBD </a></li>
+                <li><a th:href="@{/products/categories/product-mapping}">Product Mapping  TBD </a></li>
+            </ul>
+        </li>b
+        </li>
+        <li><a th:href="@{/warehouse}">Warehouses</a></li>
+
+        <li>
+            <a href="#">Future Menu 1</a>
+            <ul class="submenu">
+                <li><a href="#">Submenu 1.1</a></li>
+                <li><a href="#">Submenu 1.2</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Future Menu 2</a>
+            <ul class="submenu">
+                <li><a href="#">Submenu 2.1</a></li>
+                <li><a href="#">Submenu 2.2</a></li>
+            </ul>
+        </li>
+    </ul>
+</main>
+<div th:replace="~{layout :: footer}"></div>
+</body>
+</html>

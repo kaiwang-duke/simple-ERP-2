@@ -1,0 +1,306 @@
+<!-- src/main/resources/templates/products/categories/category-table-list.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Category Table List</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/common.js}"></script>
+    <style>
+        /* table borders */
+        .data-table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: auto; /* allow flexible columns */
+        }
+        .data-table th,
+        .data-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            white-space: normal; /* allow header wrap */
+        }
+        .data-table thead th {
+            background-color: #e6e6e6;   /* was #f2f2f2  →  ~20 % darker */
+            color: #003366;              /* keeps links readable */
+        }
+
+
+        /* fixed narrow month columns */
+        .month-col {
+            width: 5ch;
+            max-width: 5ch;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* expandable path column */
+        .path-col {
+            width: auto;
+        }
+
+        /* === Pagination overrides to cancel the global ul li styles === */
+        ul.pagination {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            list-style: none;
+            padding-left: 0;
+            margin: 1rem 0;
+        }
+
+        /* remove the grey boxes */
+        ul.pagination li {
+            background: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            display: inline !important;
+        }
+
+        /* make the links plain, blue, small, and inline */
+        ul.pagination li a.page-link,
+        ul.pagination li span.page-link {
+            display: inline !important;
+            padding: 0 !important;
+            margin: 0 0.4rem !important;
+            background: none !important;
+            border: none !important;
+            font-size: 14px !important;
+            line-height: 1.2 !important;
+            color: #007bff !important;
+            text-decoration: none;
+        }
+
+        /* bold the current page and disable pointer */
+        ul.pagination li.active span.page-link {
+            font-weight: bold;
+            color: #000 !important;
+            cursor: default;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- ==== HEADER ==== -->
+    <div th:replace="~{layout :: header}"></div>
+
+    <main>
+       <!-- ==== SEARCH & PAGE SIZE FORM + EXPORT ON ONE LINE ==== -->
+       <section style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <form style="display: flex; align-items: center; gap: .5rem; margin: 0;"
+                  th:action="@{/products/categories}" method="get" id="filterForm">
+                <label for="filter-q" class="visually-hidden">Search categories</label>
+                <input
+                        id="filter-q"
+                        type="text"
+                        name="q"
+                        th:value="${q}"
+                        placeholder="Search categories…"
+                />
+                <button type="submit">Search</button>
+
+                <label>
+                    Show
+                    <select name="size"
+                            th:value="${page.size}"
+                            onchange="document.getElementById('filterForm').submit()">
+                        <option th:value="10"   th:selected="${page.size == 10}">10</option>
+                        <option th:value="50"   th:selected="${page.size == 50}">50</option>
+                        <option th:value="100"  th:selected="${page.size == 100}">100</option>
+                        <option th:value="300"  th:selected="${page.size == 300}">300</option>
+                        <option th:value="500"  th:selected="${page.size == 500}">500</option>
+                        <option th:value="1000" th:selected="${page.size == 1000}">1,000</option>
+                        <option th:value="3000" th:selected="${page.size == 3000}">3,000</option>
+                        <option th:value="5000" th:selected="${page.size == 5000}">5,000</option>
+                    </select>
+                    entries
+                </label>
+            </form>
+
+           <!-- New Category button -->
+                   <a th:href="@{/products/categories/new}" class="btn btn-success">
+                        New Category
+                   </a>
+
+            <!-- Export button, placed above the table -->
+            <a
+                    th:href="@{/products/categories/export(
+                           q=${q},
+                           page=${page.number},
+                           size=${page.size},
+                           sort=${#strings.toLowerCase(#strings.replace(page.sort.toString(),': ',','))}
+                           )}"
+                    class="btn btn-primary" >
+                Export to Excel
+            </a>
+        </section>
+
+        <!-- ==== DATA TABLE ==== -->
+        <section>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <!-- ID column -->
+                    <th th:with="order=${page.sort.getOrderFor('id')}">
+                        <a th:href="@{/products/categories/category-table-list(
+                                           q=${q},
+                                           page=${page.number},
+                                           size=${page.size},
+                                           sort=${(order != null and order.ascending)
+                                                   ? 'id,desc'
+                                                   : 'id,asc'}
+                                      )}">
+                            ID
+                            <span th:if="${order != null and order.ascending}">▲</span>
+                            <span th:if="${order != null and order.descending}">▼</span>
+                        </a>
+                    </th>
+
+
+
+                    <!-- Name -->
+                    <th th:with="ord=${page.sort.getOrderFor('name')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'name,desc' : 'name,asc'})}">
+                            Name <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+
+                    <!-- CN Name -->
+                    <th th:with="ord=${page.sort.getOrderFor('cnName')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'cnName,desc' : 'cnName,asc'})}">
+                            CN Name <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+
+                    <!-- Parent (sort by parent.name) -->
+                    <th th:with="ord=${page.sort.getOrderFor('parent.name')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'parent.name,desc' : 'parent.name,asc'})}">
+                            Parent <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+
+                    <!-- Path (computed) -->
+                    <th class="path-col" th:with="ord=${page.sort.getOrderFor('path')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'path,desc' : 'path,asc'})}">
+                            Path <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+
+                    <!-- Seasonal -->
+                    <th th:with="ord=${page.sort.getOrderFor('seasonal')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'seasonal,desc' : 'seasonal,asc'})}">
+                            Is Season <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+
+                    <!-- Months -->
+                    <th class="month-col" th:with="ord=${page.sort.getOrderFor('purchaseMonth')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'purchaseMonth,desc' : 'purchaseMonth,asc'})}">
+                            PO Mon <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+                    <th class="month-col" th:with="ord=${page.sort.getOrderFor('startSellingMonth')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'startSellingMonth,desc' : 'startSellingMonth,asc'})}">
+                            Start  Mon <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+                    <th class="month-col" th:with="ord=${page.sort.getOrderFor('stopSellingMonth')}">
+                        <a th:href="@{/products/categories/category-table-list(q=${q},page=${page.number},size=${page.size},
+               sort=${(ord != null and ord.ascending)? 'stopSellingMonth,desc' : 'stopSellingMonth,asc'})}">
+                            Stop Mon <span th:if="${ord != null and ord.ascending}">▲</span><span th:if="${ord != null and ord.descending}">▼</span>
+                        </a>
+                    </th>
+                    <th class="month-col" >Action</th>
+                </tr>
+
+
+                </thead>
+
+
+                <tbody>
+                <tr th:each="cat : ${page.content}">
+                    <td>
+                       <a th:href="@{/products/categories/{categoryId}/edit(categoryId=${cat.id})}"
+                       th:text="${cat.id}"
+                       class="btn btn-sm btn-link">
+                       1
+                       </a>
+                  </td>
+
+
+                    <td th:text="${cat.name}">Name</td>
+                    <td th:text="${cat.cnName}">CN Name</td>
+                    <td th:text="${cat.parent != null ? cat.parent.name : '-'}">Parent</td>
+                    <td class="path-col" th:text="${@categoryTableListService.getCategoryPath(cat.id)}">Path</td>
+
+                    <td class="month-col" th:text="${cat.seasonal}">false</td>
+                    <td class="month-col" th:text="${cat.seasonal ? cat.purchaseMonth : '-'}">-</td>
+                    <td class="month-col" th:text="${cat.seasonal ? cat.startSellingMonth : '-'}">-</td>
+                    <td class="month-col" th:text="${cat.seasonal ? cat.stopSellingMonth : '-'}">-</td>
+
+                    <td>
+                        <form th:action="@{/products/categories/{categoryId}/delete(categoryId=${cat.id})}"
+                            method="post"
+                            style="display:inline;">
+                            <input type="hidden"
+                                    th:name="${_csrf.parameterName}"
+                                    th:value="${_csrf.token}"/>
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    th:attr="data-confirm-msg=|Are you sure you want to delete category &ldquo;${cat.name}&rdquo; (ID ${cat.id})?|"
+                                    onclick="return confirm(this.dataset.confirmMsg);">
+                                Delete
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(page.content)}">
+                    <td colspan="10">No categories found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ==== PAGINATION ==== -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                    th:class="|page-item ${i == page.number ? 'active' : ''}|">
+          <span th:if="${i == page.number}"
+                class="page-link"
+                th:text="${i + 1}">1</span>
+                    <a th:if="${i != page.number}"
+                       class="page-link"
+                       th:href="@{/products/categories(page=${i},q=${q},size=${page.size})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+            </ul>
+        </nav>
+    </main>
+
+    <div th:replace="~{layout :: footer}"></div>
+    <!-- ==== FOOTER ====
+    <footer>
+        <p>&copy; 2024 9Force Inc. All rights reserved 2.1</p>
+    </footer>
+    -->
+
+</div> <!-- /.wrapper -->
+
+</body>
+</html>
