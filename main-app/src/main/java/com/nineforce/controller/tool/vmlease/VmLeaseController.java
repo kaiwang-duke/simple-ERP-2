@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,8 @@ import java.time.Duration;
 @RequestMapping("/tools/vmleases")
 @RequiredArgsConstructor
 public class VmLeaseController {
+    private static final ZoneId BEIJING_ZONE = ZoneId.of("Asia/Shanghai");
+    private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
     private final VmLeaseService   leaseSvc;
     private final InstanceService  instanceSvc;     // only for listing / proxy
@@ -104,7 +108,7 @@ public class VmLeaseController {
         try {
             VmLease lease = leaseSvc.startVm(zone, vmName, auth.getUserEmail());
             ra.addFlashAttribute("msg", "VM “" + vmName + "” started until "
-                    + lease.getExpiresAt().toLocalTime() + " UTC.");
+                    + formatBeijingTime(lease.getExpiresAt()) + " Beijing.");
         } catch (Exception ex) {
             log.error("Failed to start VM {}", vmName, ex);
             ra.addFlashAttribute("err", "Error starting VM: " + ex.getMessage());
@@ -121,7 +125,7 @@ public class VmLeaseController {
         try {
             VmLease lease = leaseSvc.extendLease(zone, vmName, auth.getUserEmail());
             ra.addFlashAttribute("msg", "VM “" + vmName + "” extended to "
-                    + lease.getExpiresAt().toLocalTime() + " UTC.");
+                    + formatBeijingTime(lease.getExpiresAt()) + " Beijing.");
         } catch (Exception ex) {
             log.error("Failed to extend VM {}", vmName, ex);
             ra.addFlashAttribute("err", "Error extending VM: " + ex.getMessage());
@@ -161,5 +165,9 @@ public class VmLeaseController {
         String res = instanceSvc.setProxy(publicIP);
         ra.addFlashAttribute("msg", res);
         return "redirect:/tools/vmleases";
+    }
+
+    private static String formatBeijingTime(OffsetDateTime ts) {
+        return ts.atZoneSameInstant(BEIJING_ZONE).format(TIME_FMT);
     }
 }

@@ -22,8 +22,8 @@
             <th>Name</th>
             <th>Public IP</th>
             <th>Last&nbsp;User</th>
-            <th>Started</th>
-            <th>Expires</th>
+            <th>Started&nbsp;(BJ)</th>
+            <th>Expires&nbsp;(BJ)</th>
             <th>Min&nbsp;Left</th>
             <th>Proxy</th>
             <th>Actions</th>
@@ -39,8 +39,8 @@
             <td th:text="${inst.leaseUser ?: '-'}">n/a</td>
 
             <!-- lease times -->
-            <td th:text="${inst.startedAt != null ? #temporals.format(inst.startedAt,'HH:mm') : '-'}"></td>
-            <td th:text="${inst.expiresAt != null ? #temporals.format(inst.expiresAt,'HH:mm') : '-'}"></td>
+            <td th:text="${inst.startedAt != null ? #temporals.format(inst.startedAt.atZoneSameInstant(T(java.time.ZoneId).of('Asia/Shanghai')),'HH:mm') : '-'}"></td>
+            <td th:text="${inst.expiresAt != null ? #temporals.format(inst.expiresAt.atZoneSameInstant(T(java.time.ZoneId).of('Asia/Shanghai')),'HH:mm') : '-'}"></td>
             <td th:text="${inst.remainingMin}">0</td>
 
             <!-- proxy radio -->
