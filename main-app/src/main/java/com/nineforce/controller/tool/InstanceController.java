@@ -1,5 +1,6 @@
 package com.nineforce.controller.tool;
 
+import com.nineforce.repository.tool.vmlease.VmLeaseRepository;
 import com.nineforce.service.tool.InstanceService;
 import com.nineforce.util.FirebaseAuthUtil;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ public class InstanceController {
     private InstanceService instanceService;
     @Autowired
     private FirebaseAuthUtil firebaseAuthUtil;
+    @Autowired
+    private VmLeaseRepository vmLeaseRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(InstanceController.class);
 
@@ -62,6 +65,7 @@ public class InstanceController {
     public String stopInstance(@RequestParam String zone, @RequestParam String instanceName, Model model) {
         try {
             Map<String, String> instanceDetails = instanceService.stopInstance(zone, instanceName);
+            vmLeaseRepository.deleteById(instanceName); // keep vm_lease table in sync for manual stops
 
             model.addAttribute("status", "success");
             model.addAttribute("message", "Instance stopped successfully.");
@@ -78,6 +82,7 @@ public class InstanceController {
     @PostMapping("/stopAll")
     public String stopAllInstances(Model model) throws IOException {
         instanceService.stopAllInstances();
+        vmLeaseRepository.deleteAll(); // clear tracked leases after bulk stop from legacy page
         return "redirect:/tools/instance";
     }
 
