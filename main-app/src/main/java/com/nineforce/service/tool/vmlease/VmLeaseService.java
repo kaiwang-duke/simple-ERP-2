@@ -48,7 +48,7 @@ public class VmLeaseService {
         OffsetDateTime exp = rounded.plus(INITIAL);
 
         if (lease == null) {                               // first ever run
-            lease = new VmLease(vmName, zone, userEmail, exp, now);
+            lease = new VmLease(vmName, zone, userEmail, now, exp);
         } else {                                           // row existed but VM was off
             lease.setStartedAt(now);
             lease.setExpiresAt(exp);
