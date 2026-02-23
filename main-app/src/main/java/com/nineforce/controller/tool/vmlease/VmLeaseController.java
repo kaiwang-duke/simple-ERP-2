@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.time.Duration;
 
@@ -86,12 +87,14 @@ public class VmLeaseController {
                     expires,
                     remaining
             );
-        }).toList();
+        })
+        .sorted(Comparator.comparing(VmRow::name, String.CASE_INSENSITIVE_ORDER))
+        .toList();
 
         model.addAttribute("instances", instances);
         model.addAttribute("currentProxyIP", instanceSvc.getCurrentProxyIP());
         //model.addAttribute("userEmail", auth.getUserEmail());
-        model.addAttribute("title", "Google VM Dashboard");
+        model.addAttribute("title", "Google VM Dashboard 0.3");
         return "tools/vmleases/list";
     }
 
