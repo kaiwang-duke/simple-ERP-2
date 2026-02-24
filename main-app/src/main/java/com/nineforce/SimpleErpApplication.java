@@ -2,6 +2,7 @@ package com.nineforce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 // test comment   2
 /*
   ./mvnw clean spring-boot:run -pl main-app\
@@ -19,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
          gcr.io/eng-empire-470108-k1/erp01:latest
 
  */
+@EnableScheduling
 @SpringBootApplication(scanBasePackages = "com.nineforce")
 public class SimpleErpApplication {
 

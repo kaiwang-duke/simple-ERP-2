@@ -92,13 +92,13 @@ public class VmLeaseService {
     public List<VmLease> currentLeases() { return repo.findAll(); }
 
     /* ----------------------------------------------------------------------- */
-    /* SCHEDULER – auto‑stop expired VMs every minute                          */
-    /* @Scheduled(fixedDelay = 60_000)   // every minute  too simple use cron  */
+    /* SCHEDULER – auto‑stop expired VMs every 15 minutes (+2 min grace)       */
+    /* @Scheduled(fixedDelay = 60_000)   // test-only alternative               */
     /* ----------------------------------------------------------------------- */
 
     private static final Duration INITAL_QUARTER = Duration.ofMinutes(15);
 
-    @Scheduled(cron = "0 1/15 * * * *", zone = "UTC")  // 0 1,16,31,46 * * * *
+    @Scheduled(cron = "0 2/15 * * * *", zone = "UTC")  // :02, :17, :32, :47 (2-min grace after quarter)
     @Transactional
     public void autoShutdown() {
         OffsetDateTime now = OffsetDateTime.now();
