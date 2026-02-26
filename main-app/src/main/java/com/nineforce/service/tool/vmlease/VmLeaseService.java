@@ -35,7 +35,7 @@ public class VmLeaseService {
     public VmLease startVm(String zone, String vmName, String userEmail) throws Exception {
 
         VmLease lease = repo.findById(vmName).orElse(null);
-        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime now = currentTime();
         OffsetDateTime rounded = roundUp(now, QUARTER);
 
         // ── 1) If VM already running just throw -> UI will offer “Extend”
@@ -73,7 +73,7 @@ public class VmLeaseService {
             throw new IllegalStateException("VM is stopped – press Start");
         }
 
-        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime now = currentTime();
         OffsetDateTime newExp = lease.getExpiresAt().plus(EXTEND);
 
         // guarantee at least +15 min from *now*
@@ -96,17 +96,15 @@ public class VmLeaseService {
     /* @Scheduled(fixedDelay = 60_000)   // test-only alternative               */
     /* ----------------------------------------------------------------------- */
 
-    private static final Duration INITAL_QUARTER = Duration.ofMinutes(15);
-
     @Scheduled(cron = "0 2/15 * * * *", zone = "UTC")  // :02, :17, :32, :47 (2-min grace after quarter)
     @Transactional
     public void autoShutdown() {
-        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime now = currentTime();
         List<VmLease> due = repo.findExpired(now);
 
         for (VmLease l : due) {
             try {
-                gcp.stopVm(l.getZone(), l.getVmName());          // decide how you store zone
+                gcp.stopVm(l.getZone(), l.getVmName());
                 repo.delete(l);
                 log("AUTO_STOP_VM", "system", l.getVmName(), Map.of());
             } catch (Exception ex) {
@@ -154,6 +152,11 @@ public class VmLeaseService {
         long secs = bucket.toSeconds();
         long rounded = ((ts.toEpochSecond() + secs - 1) / secs) * secs;
         return OffsetDateTime.ofInstant(Instant.ofEpochSecond(rounded), ts.getOffset());
+    }
+
+    // Isolated for deterministic unit tests without introducing a Clock bean.
+    OffsetDateTime currentTime() {
+        return OffsetDateTime.now();
     }
 
     private void log(String action, String user, String vm, Map<String,String> d)  {
