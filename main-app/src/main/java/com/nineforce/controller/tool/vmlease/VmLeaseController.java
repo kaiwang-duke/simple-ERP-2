@@ -26,7 +26,7 @@ import java.time.Duration;
  * Thin MVC layer around {@link VmLeaseService}.<br/>
  * <ul>
  *   <li><code>GET /tools/vmleases</code> – dashboard (instances + current leases)</li>
- *   <li><code>POST /tools/vmleases/start</code>   – start or first‑time lease&nbsp;(30 min)</li>
+ *   <li><code>POST /tools/vmleases/start</code>   – start or first‑time lease&nbsp;(15 min)</li>
  *   <li><code>POST /tools/vmleases/extend</code> – extend existing lease (+15 min)</li>
  *   <li><code>POST /tools/vmleases/stop</code>   – manual shutdown & lease delete</li>
  *   <li><code>POST /tools/vmleases/stopAll</code> – one‑click emergency stop</li>
