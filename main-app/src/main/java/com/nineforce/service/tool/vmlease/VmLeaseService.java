@@ -149,9 +149,28 @@ public class VmLeaseService {
     /* ------------------------------------------------------------------ */
 
     private OffsetDateTime roundUp(OffsetDateTime ts, Duration bucket) {
-        long secs = bucket.toSeconds();
-        long rounded = ((ts.toEpochSecond() + secs - 1) / secs) * secs;
-        return OffsetDateTime.ofInstant(Instant.ofEpochSecond(rounded), ts.getOffset());
+        if (bucket.isZero() || bucket.isNegative()) {
+            throw new IllegalArgumentException("bucket must be positive");
+        }
+
+        Instant instant = ts.toInstant();
+        long bucketNanos = bucket.toNanos();
+        long epochNanos = Math.addExact(
+                Math.multiplyExact(instant.getEpochSecond(), 1_000_000_000L),
+                instant.getNano()
+        );
+        long roundedNanos = Math.multiplyExact(
+                Math.floorDiv(Math.addExact(epochNanos, bucketNanos - 1), bucketNanos),
+                bucketNanos
+        );
+
+        return OffsetDateTime.ofInstant(
+                Instant.ofEpochSecond(
+                        Math.floorDiv(roundedNanos, 1_000_000_000L),
+                        Math.floorMod(roundedNanos, 1_000_000_000L)
+                ),
+                ts.getOffset()
+        );
     }
 
     // Isolated for deterministic unit tests without introducing a Clock bean.

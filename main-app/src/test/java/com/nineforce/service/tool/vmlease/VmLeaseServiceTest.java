@@ -87,6 +87,15 @@ class VmLeaseServiceTest {
             assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 11, 15));
             assertThat(lease.getUserEmail()).isEqualTo("new@nineforce.com");
         }
+
+        @Test
+        void keepsExactQuarterBoundaryUnchanged() throws Exception {
+            svc.setNow(ts(2026, 2, 24, 10, 15));
+
+            VmLease lease = svc.startVm("us-central1-a", "vm1", "user@nineforce.com");
+
+            assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 10, 30));
+        }
     }
 
     @Nested
