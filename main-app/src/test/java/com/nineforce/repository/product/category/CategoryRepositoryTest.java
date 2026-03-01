@@ -1,6 +1,7 @@
 package com.nineforce.repository.product.category;
 
 import com.nineforce.model.product.category.Category;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +36,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-@Sql(statements = "TRUNCATE TABLE categories", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-
 class CategoryRepositoryTest {
 
     @Autowired
     private CategoryRepository repo;
+
+    @BeforeEach
+    void clearCategories() {
+        repo.deleteAllInBatch();
+    }
 
     private Category create(String name, Category parent) {
         Category c = new Category();
