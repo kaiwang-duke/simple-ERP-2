@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-@Sql(statements = "TRUNCATE TABLE categories RESTART IDENTITY CASCADE", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(statements = "TRUNCATE TABLE categories", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 
 class CategoryRepositoryTest {
 
