@@ -3,7 +3,7 @@ set -euo pipefail
 
 PROJECT_ID="${PROJECT_ID:-eng-empire-470108-k1}"
 REGION="${REGION:-us-east1}"
-SERVICE_ACCOUNT="${SERVICE_ACCOUNT:-spring-boot-backend@eng-empire-470108-k1.iam.gserviceaccount.com}"
+SERVICE_ACCOUNT="spring-boot-backend@eng-empire-470108-k1.iam.gserviceaccount.com"
 CPU="${CPU:-1}"
 MEMORY="${MEMORY:-4Gi}"
 TIMEOUT="${TIMEOUT:-900}"
