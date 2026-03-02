@@ -2,6 +2,12 @@
 set -e
 
 # ==============================
+# USAGE EXAMPLE:
+#   ./deploy.sh -build cloud main-app
+#   ./deploy.sh -build local db-switch-app
+# ==============================
+
+# ==============================
 # CONFIGURATION
 # ==============================
 PROJECT_ID="eng-empire-470108-k1"
@@ -10,12 +16,7 @@ SERVICE_ACCOUNT="spring-boot-backend@eng-empire-470108-k1.iam.gserviceaccount.co
 CPU="1"
 MEMORY="4Gi"
 TIMEOUT="900"
-
-# ==============================
-# USAGE EXAMPLE:
-#   ./deploy.sh -build cloud main-app
-#   ./deploy.sh -build local db-switch-app
-# ==============================
+SERVICE_NAME="erp01"
 
 BUILD_MODE=""
 APP_NAME=""
@@ -90,7 +91,7 @@ fi
 # ==============================
 # STEP 3: Deploy to Cloud Run
 # ==============================
-CMD="gcloud run deploy ${APP_NAME} \
+CMD="gcloud run deploy ${SERVICE_NAME} \
   --image gcr.io/${PROJECT_ID}/${APP_NAME}:latest \
   --platform managed \
   --region ${REGION} \
