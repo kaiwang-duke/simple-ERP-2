@@ -57,12 +57,24 @@ public class CloudSqlController {
     @PostMapping("/api/start-instance")
     public ResponseEntity<String> startInstance(@RequestParam String instanceId) {
         try {
-            cloudSqlService.startInstance(instanceId); // Call the service to start the instance
+            cloudSqlService.startInstance(instanceId);
             logger.info("Instance " + instanceId + " started successfully.");
             return ResponseEntity.ok("Instance started successfully.");
         } catch (Exception e) {
             logger.error("Failed to start instance: " + e.getMessage());
             return ResponseEntity.status(500).body("Failed to start instance: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/api/stop-instance")
+    public ResponseEntity<String> stopInstance(@RequestParam String instanceId) {
+        try {
+            cloudSqlService.stopInstance(instanceId);
+            logger.info("Instance " + instanceId + " stopped successfully.");
+            return ResponseEntity.ok("Instance stopped successfully.");
+        } catch (Exception e) {
+            logger.error("Failed to stop instance: " + e.getMessage());
+            return ResponseEntity.status(500).body("Failed to stop instance: " + e.getMessage());
         }
     }
 }

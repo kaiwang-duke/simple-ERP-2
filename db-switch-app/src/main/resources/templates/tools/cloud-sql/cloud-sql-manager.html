@@ -6,21 +6,19 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script>
         function startInstance() {
-            // Hardcoded instanceId (assuming it's always "ecom")
             const instanceId = 'ecom';
-
-            fetch('/api/start-instance?instanceId=' + instanceId, {
-                method: 'POST',
-            })
+            fetch('/api/start-instance?instanceId=' + instanceId, { method: 'POST' })
                 .then(response => response.text())
-                .then(data => {
-                    showErrorModal(data);  // Show success or failure message
-                    //location.reload();  // Optionally reload the page to refresh instance status
-                })
-                .catch(error => {
-                    console.error('Error starting instance:', error);
-                    showErrorModal('Failed to start instance.');
-                });
+                .then(data => { showErrorModal(data); })
+                .catch(error => { showErrorModal('Failed to start instance.'); });
+        }
+
+        function stopInstance() {
+            const instanceId = 'ecom';
+            fetch('/api/stop-instance?instanceId=' + instanceId, { method: 'POST' })
+                .then(response => response.text())
+                .then(data => { showErrorModal(data); })
+                .catch(error => { showErrorModal('Failed to stop instance.'); });
         }
 
         function showErrorModal(message) {
@@ -55,9 +53,14 @@
         <p id="instance-status" th:text="${instanceStatus}"> </p>
         <p id="activation-policy" th:text="${activationPolicy}"> </p>
         <button id="start-button"
-                th:disabled="${!(activationPolicy == 'NEVER') && (instanceStatus == 'RUNNABLE')}"
-                th:onclick="startInstance()">
+                th:disabled="${activationPolicy == 'ALWAYS'}"
+                onclick="startInstance()">
             Start Instance
+        </button>
+        <button id="stop-button"
+                th:disabled="${activationPolicy == 'NEVER'}"
+                onclick="stopInstance()">
+            Stop Instance
         </button>
     </section>
 </main>

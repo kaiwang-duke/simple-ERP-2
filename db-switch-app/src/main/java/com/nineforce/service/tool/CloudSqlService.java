@@ -38,4 +38,12 @@ public class CloudSqlService {
         SQLAdmin.Instances.Patch patchRequest = sqlAdminService.instances().patch(PROJECT_ID, instanceId, instance);
         patchRequest.execute();
     }
+
+    public void stopInstance(String instanceId) throws IOException {
+        DatabaseInstance instance = getInstanceStatus(instanceId);
+        instance.getSettings().setActivationPolicy("NEVER");
+
+        SQLAdmin.Instances.Patch patchRequest = sqlAdminService.instances().patch(PROJECT_ID, instanceId, instance);
+        patchRequest.execute();
+    }
 }
