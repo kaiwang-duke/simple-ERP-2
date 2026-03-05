@@ -53,7 +53,7 @@ class VmLeaseServiceTest {
             assertThat(lease.getUserEmail()).isEqualTo("user@nineforce.com");
             assertThat(lease.getStartedAt()).isEqualTo(svc.currentTime());
             assertThat(lease.getExpiresAt()).isEqualTo(
-                    OffsetDateTime.of(2026, 2, 24, 10, 30, 0, 0, ZoneOffset.UTC)
+                    OffsetDateTime.of(2026, 2, 24, 10, 45, 0, 0, ZoneOffset.UTC)
             );
             assertThat(fakeRepo.lastSaved).isSameAs(lease);
             assertThat(fakeGcp.startCalls).containsExactly("us-central1-a/vm1");
@@ -84,7 +84,7 @@ class VmLeaseServiceTest {
 
             assertThat(lease).isSameAs(existing);
             assertThat(lease.getStartedAt()).isEqualTo(ts(2026, 2, 24, 10, 58));
-            assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 11, 15));
+            assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 11, 30));
             assertThat(lease.getUserEmail()).isEqualTo("new@nineforce.com");
         }
 
@@ -94,7 +94,7 @@ class VmLeaseServiceTest {
 
             VmLease lease = svc.startVm("us-central1-a", "vm1", "user@nineforce.com");
 
-            assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 10, 30));
+           assertThat(lease.getExpiresAt()).isEqualTo(ts(2026, 2, 24, 10, 45));
         }
     }
 

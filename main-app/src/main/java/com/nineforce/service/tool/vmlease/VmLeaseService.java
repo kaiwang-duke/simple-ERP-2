@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class VmLeaseService {
 
-    private static final Duration  INITIAL  = Duration.ofMinutes(15);
+    private static final Duration  INITIAL  = Duration.ofMinutes(30);
     private static final Duration  EXTEND   = Duration.ofMinutes(15);
     private static final Duration  QUARTER  = Duration.ofMinutes(15);
 
